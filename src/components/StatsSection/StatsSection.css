@@ -1,0 +1,45 @@
+.stats-section {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  padding: 2rem 1rem; /* Reduced padding */
+  color: rgb(0, 0, 0);
+  text-align: center;
+  min-height: 40vh; /* Reduced height */
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10%;
+  height: 10%;
+  background-color: rgba(171, 175, 182, 0.5);
+  z-index: 1;
+}
+
+.stats-container {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Slightly smaller cards */
+  gap: 1.5rem; /* Reduced gap */
+  max-width: 700px; /* Slightly narrower */
+  margin: 0 auto;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-number {
+  font-size: 1.8rem; /* Smaller number */
+  font-weight: bold;
+}
+
+.stat-label {
+  font-size: 0.9rem; /* Smaller label */
+  margin-top: 0.4rem;
+}

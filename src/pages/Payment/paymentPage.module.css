@@ -1,0 +1,170 @@
+/* Base Container */
+.container {
+  max-width: 1240px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
+  color: #1f1f1f;
+}
+
+/* Header Section */
+.header {
+  text-align: center;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.header h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 0.5rem;
+}
+
+.header p {
+  font-size: 1rem;
+  color: #666;
+}
+
+/* Layout Content Section */
+.content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+/* Order Summary Card */
+.order_summary {
+  flex: 1 1 55%;
+  background-color: #fefefe;
+  padding: 1.75rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+/* Section Titles */
+.section_title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Customer Info Styles */
+.customer_info {
+  margin-bottom: 2rem;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  padding: 1rem 0;
+}
+
+.info_row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+}
+
+.info_label {
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #444;
+}
+
+.info_value {
+  text-align: right;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+/* Map Container Card */
+.map_container {
+  flex: 1 1 40%;
+  background-color: #fefefe;
+  padding: 1.75rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.map_content {
+  height: 300px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.03);
+}
+
+/* Payment Section */
+.payment_section {
+  margin-top: 3rem;
+  padding: 2rem;
+  background-color: #fafafa;
+  border-radius: 14px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+}
+
+.payment_header {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1c1c1c;
+  margin-bottom: 1rem;
+}
+
+.payment_methods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.paypal_container {
+  flex: 1 1 100%;
+  min-width: 300px;
+  background-color: #fff;
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+/* Secure Payment Notice */
+.secure_payment {
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #4caf50;
+}
+
+.lock_icon {
+  font-size: 1.1rem;
+  color: #4caf50;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+  }
+
+  .order_summary,
+  .map_container {
+    width: 100%;
+  }
+
+  .payment_section {
+    padding: 1.5rem;
+  }
+
+  .paypal_container {
+    padding: 1rem;
+  }
+}
