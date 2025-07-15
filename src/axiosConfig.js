@@ -3,8 +3,8 @@ import axios from 'axios';
 
 axios.defaults.baseURL =
   process.env.NODE_ENV === 'production'
-    ? 'https://isvaryam-backend.onrender.com' // ✅ CORRECT URL
-    : 'http://localhost:5000'; // or your dev backend
+    ? 'https://isvaryam-backend.onrender.com' // ✅ correct backend domain
+    : 'http://localhost:5000'; // for development
 
 axios.interceptors.request.use(config => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -13,5 +13,7 @@ axios.interceptors.request.use(config => {
   }
   return config;
 });
+
+console.log('AXIOS BASE URL:', axios.defaults.baseURL); // ✅ Debug log
 
 export default axios;
