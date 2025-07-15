@@ -1,27 +1,30 @@
-// src/axiosConfig.js
 import axios from 'axios';
 
-axios.defaults.baseURL =
-  process.env.NODE_ENV !== 'production'
-    ? 'https://isvaryam-backend.onrender.com' // development or staging
-    : 'https://isvaryam-backend.onrender.com'; // production (change if needed)
+// Set the backend base URL (hardcoded for production)
+axios.defaults.baseURL = 'https://isvaryam-backend.onrender.com';
 
-// Attach token to every request if available
+// Automatically attach the token if available
 axios.interceptors.request.use(config => {
-  try {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user?.token) {
-      config.headers.Authorization = `Bearer ${user.token}`;
-    }
-  } catch (error) {
-    console.warn('Invalid user token in localStorage');
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (user?.token) {
+    config.headers.Authorization = `Bearer ${user.token}`;
   }
   return config;
-}, error => Promise.reject(error));
+});
 
-
-
-console.log('AXIOS BASE URL:', axios.defaults.baseURL); // ✅ Debug log
-
+// Log all responses and errors clearly for debugging
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    console.error('❌ Axios Error:', {
+      message: error.message,
+      url: error.config?.url,
+      method: error.config?.method,
+      status: error.response?.status,
+      data: error.response?.data,
+    });
+    return Promise.reject(error);
+  }
+);
 
 export default axios;
