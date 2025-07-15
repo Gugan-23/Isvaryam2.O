@@ -3,8 +3,8 @@ import axios from 'axios';
 
 axios.defaults.baseURL =
   process.env.NODE_ENV === 'production'
-    ? 'https://isvaryam-backend.onrender.com' // ✅ correct backend domain
-    : 'http://localhost:5000'; // for development
+    ? '/api' // ✅ production points to server-side API
+    : 'https://isvaryam2-o.onrender.com/api'; // ✅ dev uses deployed backend
 
 axios.interceptors.request.use(config => {
   const user = JSON.parse(localStorage.getItem('user'));
