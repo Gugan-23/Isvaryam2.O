@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import classes from './profilePage.module.css';
 import { useWishlist } from '../../hooks/usewishlist';
-import axios from 'axios';
+import axios from '../axiosConfig'; // ✅ use your config, not plain 'axios'
 import ScrollToTop from '../../components/ScrollToTop/ScrollToTop';
 
 import {
