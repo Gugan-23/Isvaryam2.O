@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios from '../axiosConfig'; // ✅ use your config, not plain 'axios'
+
 
 export const createOrder = async order => {
   try {
