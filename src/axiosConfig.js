@@ -1,10 +1,10 @@
 // src/axiosConfig.js
 import axios from 'axios';
 
-axios.defaults.baseURL =
-  process.env.NODE_ENV !== 'production'
-    ? 'https://isvaryam-backend.onrender.com'
-    : '/';
+// Use the correct backend URL consistently
+const backendBaseURL = 'https://isvaryam2-o.onrender.com'; // or your actual backend URL
+
+axios.defaults.baseURL = backendBaseURL;
 
 axios.interceptors.request.use(config => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -14,5 +14,6 @@ axios.interceptors.request.use(config => {
   return config;
 });
 
+
 console.log('AXIOS BASE URL:', axios.defaults.baseURL); // ✅ Debug log
-export default axios; // ✅ This line is missing in your current file
+export default axios;
