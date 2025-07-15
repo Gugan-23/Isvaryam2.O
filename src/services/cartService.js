@@ -1,6 +1,5 @@
 
-import axios from '../../axiosConfig';
-
+import axios from 'axios';
 // Get current user's cart
 export const getCart = async () => {
   const { data } = await axios.get('/api/cart');
