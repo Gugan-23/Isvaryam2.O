@@ -13,7 +13,7 @@ import NotFound from '../../components/NotFound/NotFound';
 import Loading from '../../components/Loading/Loading';
 import './HomePage.css';
 import aboutImage from '../../components/assets/images/about.jpg';
-import axios from 'axios';
+import axios from '../axiosConfig'; // ✅ use your config, not plain 'axios'
 import StatsSection from '../../components/StatsSection/StatsSection';
 import CategorySection from '../../components/Category/category'; // ad
 import CountdownBanner from '../../components/CountdownBanner/CountdownBanner';
