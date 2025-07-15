@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from '../../axiosConfig';
+import axios from '../axiosConfig'; // ✅ use your config, not plain 'axios'
 import './RecipeDetails.css';
 export default function RecipeDetails() {
   useEffect(() => {
