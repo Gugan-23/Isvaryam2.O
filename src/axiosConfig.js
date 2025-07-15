@@ -2,9 +2,9 @@
 import axios from 'axios';
 
 axios.defaults.baseURL =
-  process.env.NODE_ENV === 'production'
-    ? '/api' // ✅ production points to server-side API
-    : 'https://isvaryam2-o.onrender.com/api'; // ✅ dev uses deployed backend
+  process.env.NODE_ENV !== 'production'
+    ? 'https://isvaryam-backend.onrender.com'
+    : '/';
 
 axios.interceptors.request.use(config => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -15,5 +15,4 @@ axios.interceptors.request.use(config => {
 });
 
 console.log('AXIOS BASE URL:', axios.defaults.baseURL); // ✅ Debug log
-
-export default axios;
+export default axios; // ✅ This line is missing in your current file
