@@ -5,7 +5,7 @@ import Title from '../../components/Title/Title';
 import { useCart } from '../../hooks/useCart';
 import { FaTrash } from 'react-icons/fa';
 
-import axios from '../../axiosConfig';
+import axios from 'axios';
 
 import classes from './cartPage.module.css';
 
