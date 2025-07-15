@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '../axiosConfig'; // ✅ use your config, not plain 'axios'
 
 // Get current user's cart
 export const getCart = async () => {
