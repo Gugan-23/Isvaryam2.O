@@ -4,7 +4,7 @@ import Price from '../../components/Price/Price';
 import Title from '../../components/Title/Title';
 import { useCart } from '../../hooks/useCart';
 import { FaTrash } from 'react-icons/fa';
-import axios from 'axios';
+import axios from '../axiosConfig'; // ✅ use your config, not plain 'axios'
 import classes from './cartPage.module.css';
 
 export default function CartPage() {
