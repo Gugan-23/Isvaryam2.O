@@ -1,6 +1,6 @@
   import React, { useEffect, useState, useCallback } from 'react';
   import { useNavigate, useParams } from 'react-router-dom';
-  import axios from 'axios';
+import axios from '../axiosConfig'; // ✅ use your config, not plain 'axios'
   import { format } from 'date-fns';
   import StarRating from '../../components/StarRating/StarRating';
   import { useCart } from '../../hooks/useCart';
