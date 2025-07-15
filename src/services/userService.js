@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios from '../axiosConfig'; // ✅ use your config, not plain 'axios'
+
 //import { generateTokenResponse } from '../utils/generateToken.js';
 
 export function getUser() {
