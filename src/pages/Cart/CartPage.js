@@ -4,8 +4,8 @@ import Price from '../../components/Price/Price';
 import Title from '../../components/Title/Title';
 import { useCart } from '../../hooks/useCart';
 import { FaTrash } from 'react-icons/fa';
-import axios from '../axiosConfig'; // ✅ correct
 
+import axios from '../../axiosConfig';
 
 import classes from './cartPage.module.css';
 
