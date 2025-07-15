@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import axios from '../axiosConfig'; // ✅ use your config, not plain 'axios'
+import axios from '../../axiosConfig';
+
 import { getAll } from '../../services/foodService';
 import Thumbnails from '../../components/Thumbnails/Thumbnails';
 import NotFound from '../../components/NotFound/NotFound';
