@@ -24,9 +24,10 @@ function App() {
   return (
     <>
       <ScrollToTop />
-      <div className="app-container">
+      <div className="app-container" >
         <Loading />
         <Header />
+        
         <main className="main-content">
           <AppRoutes />
         </main>
@@ -45,6 +46,7 @@ function App() {
             height: '60px',
             backgroundColor: '#007bff',
             color: 'white',
+
             border: 'none',
             fontSize: '28px',
             boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',

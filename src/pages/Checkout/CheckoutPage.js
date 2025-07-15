@@ -13,8 +13,20 @@ import { FaLock, FaArrowRight } from 'react-icons/fa';
 import Map from '../../components/Map/Map';
 
 export default function CheckoutPage() {
+  useEffect(() => {
+  const scrollToTop = () => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  };
+
+  const timeout = setTimeout(scrollToTop, 100);
+  return () => clearTimeout(timeout);
+}, []);
+
   const { cart } = useCart();
   const { user } = useAuth();
+  // Eventually:
+
   const navigate = useNavigate();
   const [order, setOrder] = useState({ ...cart });
   const [couponCode, setCouponCode] = useState('');
@@ -50,33 +62,45 @@ export default function CheckoutPage() {
   }, []);
 
   const submit = async data => {
-    if (!order.addressLatLng) {
-      toast.warning('Please select your location on the map');
+  if (!order.addressLatLng) {
+    toast.warning('Please select your location on the map');
+    return;
+  }
+
+  const orderToSend = {
+    name: data.name,
+    address: data.address,
+    addressLatLng: {
+      lat: String(order.addressLatLng.lat),
+      lng: String(order.addressLatLng.lng)
+    },
+    couponCode: appliedCoupon ? appliedCoupon.couponCode : null,
+    discount: appliedCoupon ? discount : 0,
+    totalPrice: finalTotal,
+    items: cart.items.map(item => ({
+      product: item.food._id,
+      size: item.size,
+      price: item.price,
+      quantity: item.quantity
+    }))
+  };
+
+  try {
+    const createdOrder = await createOrder(orderToSend); // ✅ Get created order from backend
+    if (!createdOrder || !createdOrder._id) {
+      toast.error("Failed to retrieve order ID from response.");
       return;
     }
-    // Build the order object as expected by backend
-    const orderToSend = {
-      name: data.name,
-      address: data.address,
-      addressLatLng: {
-        lat: String(order.addressLatLng.lat),
-        lng: String(order.addressLatLng.lng)
-      },
-      couponCode: appliedCoupon ? appliedCoupon.couponCode : null,
-      discount: appliedCoupon ? discount : 0,
-      totalPrice: finalTotal, // discounted total
-      items: cart.items.map(item => ({
-        product: item.food._id, // must be the MongoDB _id
-        size: item.size,
-        price: item.price,
-        quantity: item.quantity
-      }))
-      // user will be set by backend from auth token
-    };
-    console.log('Order data sent:', orderToSend);
-    await createOrder(orderToSend);
-    navigate('/payment');
-  };
+    navigate(`/payment/${createdOrder._id}`); // ✅ Correct usage
+
+
+
+  } catch (err) {
+    console.error('Order creation failed', err);
+    toast.error('Failed to place order. Please try again.');
+  }
+};
+
 
   const handleApplyCoupon = async () => {
     setCouponError('');

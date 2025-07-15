@@ -7,6 +7,16 @@ import Title from '../../components/Title/Title';
 import Search from '../../components/Search/Search';
 
 export default function UsersPage() {
+  useEffect(() => {
+  const scrollToTop = () => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  };
+
+  const timeout = setTimeout(scrollToTop, 100);
+  return () => clearTimeout(timeout);
+}, []);
+
   const [users, setUsers] = useState();
   const { searchTerm } = useParams();
   const auth = useAuth();

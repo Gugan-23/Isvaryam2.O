@@ -97,17 +97,82 @@ const reducer = (state, action) => {
 };
 
 export default function HomePage() {
+  useEffect(() => {
+  const scrollToTop = () => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  };
+
+  const timeout = setTimeout(scrollToTop, 100);
+  return () => clearTimeout(timeout);
+}, []);
+
   const [{ foods, tags, loading, error }, dispatch] = useReducer(reducer, initialState);
   const { searchTerm, tag } = useParams();
 
   const [bannerImages, setBannerImages] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [bgColor, setBgColor] = useState('#000000');
+  const [bgColor, setBgColor] = useState('#ffffff');
   const touchStartX = useRef(null);
   const touchEndX = useRef(null);
   const mouseStartX = useRef(null);
   const mouseEndX = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [name, setName] = useState('');
+const [email, setEmail] = useState('');
+const [subject, setSubject] = useState('');
+const [message, setMessage] = useState('');
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+
+  const [isSending, setIsSending] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSending(true); // 🔒 Disable button
+
+    try {
+      const res = await fetch('https://isvaryam-backend.onrender.com/api/contact/send-contact-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify(formData)
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert('✅ Message sent successfully!');
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+      } else {
+        alert(data.error || 'Something went wrong');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('❌ Failed to send message.');
+    }
+
+    setIsSending(false); // 🔓 Re-enable button
+  };
+
 
   useEffect(() => {
     const fetchAssets = async () => {
@@ -210,101 +275,75 @@ export default function HomePage() {
 
 
   return (
-      <div
-  className="home-page"
-  style={{
-    backgroundColor: bgColor,
-    transition: 'background-color 1s ease-in-out',
-  }}
->
-  {/* Hero Section */}
-  <section className="hero-section" style={{ position: 'relative', overflow: 'hidden', minHeight: '100vh' }}>
-    <video
-      autoPlay
-      loop
-      muted
-      playsInline
-      className="about-hero-video"
-      style={{
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-        left: 0,
-        top: 0,
-        zIndex: 0,
-      }}
-    >
-      <source src="/about hero.mp4" type="video/mp4" />
-      Your browser does not support the video tag.
-    </video>
+    <div className="home-page" style={{ backgroundColor: bgColor, transition: 'background-color 1s ease-in-out' }} >
 
+      {/* Hero Section */}
 
-
-    <div
-      className="hero-content"
-      style={{
-        position: 'relative',
-        zIndex: 1,
-        color: 'white',
-        textAlign: 'center',
-        paddingTop: '20vh',
-      }}
-    >
-      <h1 className="hero-title" style={{ fontSize: '3rem', fontWeight: 'bold' }}>
-        WELCOME TO ISVARYAM
-      </h1>
-      <p className="hero-subtitle" style={{ fontSize: '1.5rem', marginTop: '1rem' }}>
-        HEALTHY HEART BETTER LIFE
-      </p>
-
+      <div className="about-hero">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="about-hero-video"
+          style={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            left: 0,
+            top: 0,
+            zIndex: 0,
+          }}
+        >
+          <source src="/about hero.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <div className="hero-overlay" style={{ position: 'relative', zIndex: 1}} >
+            <h1>WELCOME TO ISVARYAM</h1>
+            <p>HEALTHY HEART BETTER LIFE</p>
+        </div>
+      </div>
       
       <div className="search-container" style={{ marginTop: '2rem' }}>
         
-      </div>
     </div>
-  </section>
-  
-      <CountdownBanner />
+      
+    
+       
+    <CountdownBanner />
 
-       <section className="categories-section">
-        
-        <CategorySection tags={tags} />
-        </section>
-<section className="products-section container fadeInUp" style={{
+    <section className="categories-section">   
+       <CategorySection tags={tags} />
+    </section>
+     
+    <section className="products-section container fadeInUp" style={{ backgroundImage: `url('/bg2.png')`,
         backgroundColor: bgColor,
-    backgroundImage: `url('/bg2.png')`,
-   
-}}
+
+      }}
     >
         
-
-        {loading ? (
+    {loading ? (
           <Loading />
         ) : error ? (
           <NotFound linkText="Try Again" message={error} />
         ) : foods.length === 0 ? (
           <NotFound linkText="Reset Search" message="No items found." />
         ) : (
-          <TopSelling foods={foods} />
-        )}
-      </section>
-      <section style={{ background: '#ffffff' }}><p>      .</p></section>
-      <section className="products-section container fadeInUp" style={{
-        backgroundColor: bgColor,
-    backgroundImage: `url('/bg2.png')`,
-   
-}}
-    >
-        <>
-      {/* rest of homepage */}
-    </>
-
-       
-
       
+      <div className="products-grid-container" /*style={{
+        backgroundColor: bgColor,
+        backgroundImage: `url('/bg2.png')`, 
+      }}*/
+      >
+      <TopSelling foods={foods} />
+      </div>
+    )}
 
-        
+      <>
+      {/* rest of homepage */}
+      </>
+      
         <h2 className="section-title"><br />Fresh From Our Farms</h2>
         <div className="filter-container">
           <Tags tags={tags} />
@@ -416,7 +455,7 @@ export default function HomePage() {
           </div>
           <div className="member-info">
             <h4>Isvarya</h4>
-            <span>Co‑Founder & CEO</span>
+            <span>Founder & CEO</span>
             <p>
               Isvaryam with a vision to bring back the purity of traditional cold-press oil extraction. Under her guidance, the brand has stayed committed to producing 100% chemical-free, unrefined oils using age-old wooden ghani methods that preserve natural nutrients.
 
@@ -439,7 +478,7 @@ export default function HomePage() {
           </div>
           <div className="member-info">
             <h4>Arul</h4>
-            <span>Co‑Founder & CEO</span>
+            <span>Marketing manager</span>
             <p>
               Isvaryam's production unit where high-quality groundnut, coconut, and sesame oils are made without heat or solvents. His focus on sourcing from trusted farmers and maintaining hygiene ensures every bottle meets the highest purity and nutritional standards.
 
@@ -518,7 +557,7 @@ export default function HomePage() {
   </p>
   <p>
     <a
-      href="/contact"
+      href="#contact"
       style={{
         display: 'inline-block',
         padding: '12px 24px',
@@ -551,7 +590,7 @@ export default function HomePage() {
     transition: 'background-image 1s ease-in-out, background-color 1s ease-in-out',
   }}>
     <RecipeDetails /></section>
-       <section id="contact" className="contact-section" style={{ backgroundColor: '#fff', padding: '60px 20px' }}>
+       <section  className="contact-section" style={{ backgroundColor: '#fff', padding: '60px 20px' }}>
       <div className="container">
         {/* Google Map Embed */}
         <div className="map mb-4">
@@ -613,12 +652,51 @@ export default function HomePage() {
         <p><strong>Sunday:</strong> Closed</p>
       </div>
     </div>
-    <form>
-      <input type="text" placeholder="Your Name" className="contact-input" />
-      <input type="email" placeholder="Your Email" className="contact-input" />
-      <input type="text" placeholder="Subject" className="contact-input" />
-      <textarea placeholder="Message" className="contact-input"></textarea>
-      <button className="send-btn" type="submit">Send Message</button>
+      <form  id="contact" onSubmit={handleSubmit}>
+      <input
+        type="text"
+        name="name"
+        value={formData.name}
+        onChange={handleChange}
+        placeholder="Your Name"
+        className="contact-input"
+        required
+      />
+      <input
+        type="email"
+        name="email"
+        value={formData.email}
+        onChange={handleChange}
+        placeholder="Your Email"
+        className="contact-input"
+        required
+      />
+      <input
+        type="text"
+        name="subject"
+        value={formData.subject}
+        onChange={handleChange}
+        placeholder="Subject"
+        className="contact-input"
+        required
+      />
+      <textarea
+        name="message"
+        value={formData.message}
+        onChange={handleChange}
+        placeholder="Message"
+        className="contact-input"
+        required
+      ></textarea>
+      
+      <button
+        type="submit"
+        className="send-btn"
+        disabled={isSending}
+        style={{ opacity: isSending ? 0.6 : 1, cursor: isSending ? 'not-allowed' : 'pointer' }}
+      >
+        {isSending ? 'Sending...' : 'Send Message'}
+      </button>
     </form>
   </div>
 </section>

@@ -10,6 +10,16 @@ import GoogleButton from '../../components/GoogleButton/GoogleButton';
 import { googleSignup } from '../../services/userService';
 
 export default function LoginPage() {
+  useEffect(() => {
+  const scrollToTop = () => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  };
+
+  const timeout = setTimeout(scrollToTop, 100);
+  return () => clearTimeout(timeout);
+}, []);
+
   const {
     handleSubmit,
     register,

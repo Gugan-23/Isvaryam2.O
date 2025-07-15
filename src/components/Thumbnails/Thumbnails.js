@@ -81,12 +81,18 @@ export default function Thumbnails({ foods }) {
   }
 
   return (
-    <>
+    < >
       {dialog.open && (
         <div className={classes.centerDialogBox}>{dialog.message}</div>
       )}
 
-      <div className={classes.productsGrid}>
+      <div className={classes.productsGrid}  style={{
+    backgroundImage: `url('/bg2.png')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    minHeight: '60vh',
+    transition: 'background-image 1s ease-in-out, background-color 1s ease-in-out',
+  }}>
         {foods
           .filter(
             (food) =>

@@ -48,14 +48,15 @@ export default function AppRoutes() {
           </AuthRoute>
         }
       />
-      <Route
-        path="/payment"
-        element={
-          <AuthRoute>
-            <PaymentPage />
-          </AuthRoute>
-        }
-      />
+     <Route
+  path="/payment/:orderId"
+  element={
+    <AuthRoute>
+      <PaymentPage />
+    </AuthRoute>
+  }
+/>
+
       <Route
         path="/product"
         element={

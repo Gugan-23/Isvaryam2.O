@@ -44,3 +44,14 @@ export const getUserPurchaseCount = async () => {
   const { data } = await axios.get('/api/orders/user-purchase-count');
   return data.count;
 };
+
+export const deleteOrder = async (orderId) => {
+  return axios.delete(`api/orders/${orderId}`);
+};
+
+
+export const getOrderById = async (id) => {
+  const { data } = await axios.get(`/api/orders/order/${id}`);
+  return data;
+};
+

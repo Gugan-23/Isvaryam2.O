@@ -12,6 +12,16 @@ import ScrollToTop from '../../components/ScrollToTop/ScrollToTop';
 
 
 export default function ProductPage() {
+  useEffect(() => {
+  const scrollToTop = () => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  };
+
+  const timeout = setTimeout(scrollToTop, 100);
+  return () => clearTimeout(timeout);
+}, []);
+
   const [foods, setFoods] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [category, setCategory] = useState('');
@@ -125,7 +135,8 @@ export default function ProductPage() {
       ) : (
         <Thumbnails foods={filteredFoods} />
       )}
+      
     </div>
     </>
   );
-}
+} 

@@ -3,6 +3,16 @@ import { useParams } from 'react-router-dom';
 import axios from '../../axiosConfig';
 import './RecipeDetails.css';
 export default function RecipeDetails() {
+  useEffect(() => {
+  const scrollToTop = () => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  };
+
+  const timeout = setTimeout(scrollToTop, 100);
+  return () => clearTimeout(timeout);
+}, []);
+
   const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
   const [error, setError] = useState('');

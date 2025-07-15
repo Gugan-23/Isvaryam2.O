@@ -65,10 +65,17 @@ export default function Header() {
           >
             <ul className={classes.nav_links}>
               <li><Link to="/" onClick={() => setMenuOpen(false)}>Home</Link></li>
+
+
+                   
               <li><Link to="/about" onClick={() => setMenuOpen(false)}>About Us</Link></li>
+
 
               {user && (
                 <>
+                <li>
+                  <Link to="/product" onClick={() => setMenuOpen(false)}>Products</Link>
+                </li>
                   <li><Link to="/orders" onClick={() => setMenuOpen(false)}>My Orders</Link></li>
 
               <li><Link to="/cart" onClick={() => setMenuOpen(false)}>My Cart</Link></li>
@@ -86,9 +93,6 @@ export default function Header() {
   </Link>
 </li>
 
-                   <li>
-                  <Link to="/product" onClick={() => setMenuOpen(false)}>Products</Link>
-                </li>
 
                   
 

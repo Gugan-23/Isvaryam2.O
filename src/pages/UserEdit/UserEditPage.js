@@ -9,6 +9,16 @@ import { EMAIL } from '../../constants/patterns';
 import Button from '../../components/Button/Button';
 
 export default function UserEditPage() {
+  useEffect(() => {
+  const scrollToTop = () => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  };
+
+  const timeout = setTimeout(scrollToTop, 100);
+  return () => clearTimeout(timeout);
+}, []);
+
   const {
     register,
     reset,

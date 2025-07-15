@@ -182,3 +182,225 @@
     font-size: 0.9rem;
   }
 }
+.sendOtpButton,
+.verifyOtpButton {
+  margin-top: 8px;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.sendOtpButton:hover,
+.verifyOtpButton:hover {
+  background-color: #0056b3;
+}
+
+.error {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 4px;
+}
+
+/* MAIL VALIDATION IN REGISTER PAGE */
+
+/* Add to existing CSS */
+.emailContainer {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+}
+
+.emailContainer input {
+  padding-right: 7rem;
+}
+
+.otpButton {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  padding: 0 1rem;
+  background: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.25s ease;
+}
+
+.otpButton:hover {
+  background: #3a7bc8;
+}
+
+.otpButton:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+}
+
+.otpField {
+  margin-top: 1rem;
+}
+
+.success {
+  color: #28a745;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+/* Update existing .error class */
+.error {
+  color: #d9534f;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+/* Add disabled state styling */
+input:disabled {
+  background-color: #f8f9fa;
+  cursor: not-allowed;
+}
+
+/* Add to existing CSS */
+.otpInputContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.otpInputContainer input {
+  padding-right: 7rem;
+}
+
+.resendButton {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  padding: 0 1rem;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.25s ease;
+  white-space: nowrap;
+}
+
+.resendButton:hover {
+  background: #5a6268;
+}
+
+.countdown {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.85rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 480px) {
+  .otpInputContainer input {
+    padding-right: 5.5rem;
+  }
+  
+  .resendButton {
+    padding: 0 0.8rem;
+    font-size: 0.8rem;
+  }
+  
+  .countdown {
+    font-size: 0.8rem;
+  }
+}
+
+/* Login Modal Forgot Password */
+
+/* Add to existing CSS */
+.forgotPassword {
+  text-align: right;
+  margin-top: 0.5rem;
+}
+
+.forgotButton {
+  background: none;
+  border: none;
+  color: #4a90e2;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0;
+  font-size: 0.9rem;
+}
+
+.forgotButton:hover {
+  text-decoration: underline;
+}
+
+/* Add these new styles */
+.resendContainer {
+  margin-top: 0.5rem;
+  text-align: right;
+}
+
+.resendButton {
+  background: none;
+  border: none;
+  color: #4a90e2;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0;
+  font-size: 0.9rem;
+}
+
+.resendButton:hover {
+  text-decoration: underline;
+}
+
+.countdown {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.success {
+  color: #28a745;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+/* Login button styling (shared with your Button component if reused) */
+.loginButton {
+  width: 100%;
+  background: linear-gradient(to right, #6a11cb, #2575fc);
+  color: #fff;
+  font-weight: 600;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.loginButton:hover {
+  background: linear-gradient(to right, #5f10b5, #1c63db);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.loginButton:active {
+  transform: scale(0.98);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}

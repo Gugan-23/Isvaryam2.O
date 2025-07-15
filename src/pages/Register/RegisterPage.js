@@ -1,34 +1,100 @@
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { EMAIL } from '../../constants/patterns';
-import Title from '../../components/Title/Title';
-import Button from '../../components/Button/Button';
-import classes from './registerPage.module.css';
 
-export default function RegisterPage() {
+import Button from '../../components/Button/Button';
+import classes from '../../components/AuthModal/AuthModal.module.css';
+
+
+export default function RegisterModal({ onClose, onSwitchToLogin }) {
   const auth = useAuth();
   const { user } = auth;
-  const navigate = useNavigate();
-  const [params] = useSearchParams();
-  const returnUrl = params.get('returnUrl');
-
+  
+  // OTP states
+  const [otpEmail, setOtpEmail] = useState('');
+  const [otp, setOtp] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpMessage, setOtpMessage] = useState('');
+  const [emailVerified, setEmailVerified] = useState(false);
+  
   useEffect(() => {
     if (user) {
-      returnUrl ? navigate(returnUrl) : navigate('/');
+      onClose();
     }
-  }, [user]);
+  }, [user, onClose]);
 
   const {
     handleSubmit,
     register,
     getValues,
+    setValue,
     formState: { errors },
   } = useForm();
 
   const submit = async data => {
     await auth.register(data);
+  };
+
+  // Create regex from EMAIL pattern
+  const emailRegex = new RegExp(EMAIL);
+
+  // Send OTP to email
+  const sendOtpToEmail = async () => {
+    const email = getValues('email');
+    if (!email || !emailRegex.test(email)) {
+      setOtpMessage('Please enter a valid email first');
+      return;
+    }
+    
+    try {
+      setOtpMessage('Sending OTP...');
+      const res = await fetch('http://localhost:5000/api/contact/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setOtpSent(true);
+        setOtpEmail(email);
+        setOtpMessage('OTP sent to your email.');
+      } else {
+        setOtpMessage(data.error || 'Failed to send OTP.');
+      }
+    } catch (err) {
+      setOtpMessage('Error sending OTP');
+    }
+  };
+
+  // Verify OTP
+  const verifyOtp = async () => {
+    if (!otp) {
+      setOtpMessage('Please enter OTP');
+      return;
+    }
+    
+    try {
+      setOtpMessage('Verifying OTP...');
+      const res = await fetch('http://localhost:5000/api/contact/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: otpEmail, otp }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setOtpMessage('Email verified successfully!');
+        setEmailVerified(true);
+        // Set email value for form submission
+        setValue('email', otpEmail);
+      } else {
+        setOtpMessage(data.error || 'Failed to verify OTP');
+      }
+    } catch (err) {
+      setOtpMessage('Error verifying OTP');
+    }
   };
 
   // Eye icon toggle for both password fields
@@ -61,13 +127,73 @@ export default function RegisterPage() {
       cleanup1?.();
       cleanup2?.();
     };
-  }, []);
+  }, [emailVerified]); // Re-run when email verification status changes
 
   return (
-    <div className={classes.container}>
-      <div className={classes.details}>
-        <Title title="Register" />
+    <div className={classes.modalBackdrop} onClick={onClose}>
+      <div className={classes.modalContent} onClick={e => e.stopPropagation()}>
+        <div className={classes.modalHeader}>
+          <h2>Register</h2>
+          <button className={classes.closeButton} onClick={onClose}>
+            &times;
+          </button>
+        </div>
+        
         <form onSubmit={handleSubmit(submit)} className={classes.form} noValidate>
+
+          <div className={classes.field}>
+            <label>Email</label>
+              <div className={classes.emailContainer}>
+                <input
+                  type="email"
+                  {...register('email', { 
+                    required: true, 
+                    pattern: {
+                      value: emailRegex,
+                      message: 'Enter a valid email'
+                    },
+                    onChange: (e) => {
+                      if (!emailVerified) {
+                        setOtpEmail(e.target.value);
+                      }
+                    }
+                  })}
+                  className={classes.input}
+                  disabled={emailVerified}
+                />
+                {!emailVerified && (
+                  <button 
+                    type="button" 
+                    className={classes.otpButton}
+                    onClick={otpSent ? verifyOtp : sendOtpToEmail}
+                    disabled={otpSent && !otp}
+                  >
+                    {otpSent ? 'Verify OTP' : 'Send OTP'}
+                  </button>
+                )}
+              </div>
+              {errors.email && <p className={classes.error}>{errors.email.message}</p>}
+            
+              {otpSent && !emailVerified && (
+
+                <div className={classes.otpField}>
+                  <label>Enter OTP</label>
+                  <input
+                    type="text"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    className={classes.input}
+                    placeholder="Check your email for OTP"
+                  />
+                </div>
+              )}
+            
+              {otpMessage && (
+                <p className={emailVerified ? classes.success : classes.error}>
+                  {otpMessage}
+                </p>
+              )}
+          </div>
 
           <div className={classes.field}>
             <label>Name</label>
@@ -75,36 +201,27 @@ export default function RegisterPage() {
               type="text"
               {...register('name', { required: true, minLength: 5 })}
               className={classes.input}
+              disabled={!emailVerified}
             />
             {errors.name && <p className={classes.error}>Name must be at least 5 characters</p>}
           </div>
-
-          <div className={classes.field}>
-            <label>Email</label>
-            <input
-              type="email"
-              {...register('email', { required: true, pattern: EMAIL })}
-              className={classes.input}
-            />
-            {errors.email && <p className={classes.error}>Enter a valid email</p>}
-          </div>
           
           <div className={classes.field}>
-  <label>Phone Number</label>
-  <input
-    type="tel"
-    {...register('phone', {
-      required: 'Phone number is required',
-      pattern: {
-        value: /^[6-9]\d{9}$/,
-        message: 'Enter a valid 10-digit phone number',
-      },
-    })}
-    className={classes.input}
-  />
-  {errors.phone && <p className={classes.error}>{errors.phone.message}</p>}
-</div>
-
+            <label>Phone Number</label>
+            <input
+              type="tel"
+              {...register('phone', {
+                required: 'Phone number is required',
+                pattern: {
+                  value: /^[6-9]\d{9}$/,
+                  message: 'Enter a valid 10-digit phone number',
+                },
+              })}
+              className={classes.input}
+              disabled={!emailVerified}
+            />
+            {errors.phone && <p className={classes.error}>{errors.phone.message}</p>}
+          </div>
 
           <div className={classes.field}>
             <label>Password</label>
@@ -114,6 +231,7 @@ export default function RegisterPage() {
                 id="password"
                 {...register('password', { required: true, minLength: 5 })}
                 className={classes.input}
+                disabled={!emailVerified}
               />
               <i className="fa fa-eye" id="eye-icon"></i>
             </div>
@@ -132,6 +250,7 @@ export default function RegisterPage() {
                     value !== getValues('password') ? 'Passwords do not match' : true,
                 })}
                 className={classes.input}
+                disabled={!emailVerified}
               />
               <i className="fa fa-eye" id="eye-icon-confirm"></i>
             </div>
@@ -146,19 +265,27 @@ export default function RegisterPage() {
               type="text"
               {...register('address', { required: true, minLength: 10 })}
                 className={`${classes.input} ${classes.addressInput}`}
+                disabled={!emailVerified}
             />
             {errors.address && <p className={classes.error}>Address must be at least 10 characters</p>}
           </div>
 
-          <Button type="submit" text="Register" />
+          <Button 
+            type="submit" 
+            text="Register" 
+            disabled={!emailVerified}
+          />
 
-          <div className={classes.login}>
+          <div className={classes.switch}>
             Already a user?&nbsp;
-            <Link to={`/login${returnUrl ? '?returnUrl=' + returnUrl : ''}`}>
+            <button 
+              type="button" 
+              className={classes.switchButton}
+              onClick={onSwitchToLogin}
+            >
               Login here
-            </Link>
+            </button>
           </div>
-
         </form>
       </div>
     </div>

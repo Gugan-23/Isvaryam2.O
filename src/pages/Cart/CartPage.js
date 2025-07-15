@@ -3,13 +3,22 @@ import { Link } from 'react-router-dom';
 import Price from '../../components/Price/Price';
 import Title from '../../components/Title/Title';
 import { useCart } from '../../hooks/useCart';
-import { FaTrash, FaLock, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FaTrash } from 'react-icons/fa';
 import axios from 'axios';
 import classes from './cartPage.module.css';
 
 export default function CartPage() {
+  useEffect(() => {
+  const scrollToTop = () => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  };
+
+  const timeout = setTimeout(scrollToTop, 100);
+  return () => clearTimeout(timeout);
+}, []);
+
   const { cart, removeFromCart, changeQuantity } = useCart();
-  const [showSummary, setShowSummary] = useState(false);
   const [bgColor, setBgColor] = useState('#ffffff'); // Default white
 
   useEffect(() => {
@@ -18,13 +27,12 @@ export default function CartPage() {
       .catch((err) => console.error('Error fetching background color:', err));
   }, []);
 
-  const totalPrice = cart.totalPrice;
-  const discount = Math.floor(totalPrice * 0.05);
-  const prepaidDiscount = Math.floor((totalPrice - discount) * 0.02);
-  const toPay = Math.floor((totalPrice - discount) - prepaidDiscount);
-  const savings = discount + prepaidDiscount;
+  // ✅ Calculate total price of all cart items
+  const totalPrice = cart.items.reduce((total, item) => {
+    return total + item.price * item.quantity;
+  }, 0);
 
-  return (  
+  return (
     <div className={classes.cart_wrapper} style={{ backgroundColor: bgColor }}>
       <Title title="Your Cart" fontSize="1.5rem" />
 
@@ -65,29 +73,9 @@ export default function CartPage() {
             ))}
           </div>
 
-          {showSummary && (
-            <div className={classes.summary_box}>
-              <h4>Price Summary</h4>
-              <div className={classes.row}><span>Order Total</span><span>₹{totalPrice}</span></div>
-              <div className={classes.row}><span>Items Discount</span><span>− ₹{discount}</span></div>
-              <div className={classes.row}><span>Shipping</span><span><s>₹49</s></span></div>
-              <div className={classes.row}><span>2% Prepaid Discount</span><span>− ₹{prepaidDiscount}</span></div>
-              <div className={classes.total}><strong>To Pay</strong><strong>₹{toPay}</strong></div>
-              <div className={classes.savings}>🎉 You saved ₹{savings} on this order!</div>
-              <div className={classes.payment_icons}>
-                <img src="/images/visa.png" alt="visa" />
-                <img src="/images/mastercard.png" alt="mastercard" />
-                <img src="/images/upi.png" alt="upi" />
-                <img src="/images/rupay.png" alt="rupay" />
-                <img src="/images/netbanking.png" alt="net banking" />
-              </div>
-              <div className={classes.secure}><FaLock /> 100% secured payments</div>
-            </div>
-          )}
-
           <div className={classes.checkout_footer}>
-            <div onClick={() => setShowSummary(!showSummary)} className={classes.amount_toggle}>
-              ₹{toPay.toLocaleString()} {showSummary ? <FaChevronDown /> : <FaChevronUp />}
+            <div className={classes.amount_to_pay}>
+              <strong>To Pay:</strong> ₹{totalPrice.toLocaleString()}
             </div>
             <Link to="/checkout" className={classes.checkout_btn}>Continue</Link>
           </div>

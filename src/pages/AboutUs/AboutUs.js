@@ -1,7 +1,18 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './AboutUs.css';
 
 export default function AboutUs() {
+  useEffect(() => {
+  const scrollToTop = () => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  };
+
+  const timeout = setTimeout(scrollToTop, 100);
+  return () => clearTimeout(timeout);
+}, []);
+
   const [bgColor, setBgColor] = useState('#f9f8f5');
   const [currentCertIndex, setCurrentCertIndex] = useState(0);
   const [currentShopIndex, setCurrentShopIndex] = useState(2); // Centered at 3rd image
@@ -10,6 +21,61 @@ export default function AboutUs() {
   const storyRef = useRef(null);
   const valuesRef = useRef(null);
   const autoScrollRef = useRef(null);
+   const [formData, setFormData] = useState({
+      name: '',
+      email: '',
+      subject: '',
+      message: ''
+    });
+  
+    const [isSending, setIsSending] = useState(false);
+  
+    const handleChange = (e) => {
+      setFormData((prev) => ({
+        ...prev,
+        [e.target.name]: e.target.value
+      }));
+    };
+  
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      setIsSending(true); // 🔒 Disable button
+  
+      try {
+        const res = await fetch('https://isvaryam-backend.onrender.com/api/contact/send-contact-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify(formData)
+        });
+  
+        const data = await res.json();
+        if (res.ok) {
+          alert('✅ Message sent successfully!');
+          setFormData({
+            name: '',
+            email: '',
+            subject: '',
+            message: ''
+          });
+        } else {
+          alert(data.error || 'Something went wrong');
+        }
+      } catch (error) {
+        console.error(error);
+        alert('❌ Failed to send message.');
+      }
+  
+      setIsSending(false); // 🔓 Re-enable button
+    };
+  
+   const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate('/product'); // 👈 Your target route
+  };
 
   // Sample data - replace with your actual certificate and shop images
   const certificates = [
@@ -309,7 +375,9 @@ export default function AboutUs() {
           Experience the difference of truly pure, traditional foods. Your health, and the health of our planet, 
           begins with what you choose to nourish yourself with.
         </p>
-        <button className="cta-button">Discover Our Products</button>
+          <button className="cta-button" onClick={handleClick}>
+      Discover Our Products
+    </button>
       </div>
 
       <section className="contact-header">
@@ -335,12 +403,52 @@ export default function AboutUs() {
 
       <section className="contact-form-section">
         <h2>Send a Message</h2>
-        <form className="contact-form">
-          <input type="text" placeholder="Your Name" required />
-          <input type="email" placeholder="Your Email" required />
-          <textarea rows="5" placeholder="Your Message" required></textarea>
-          <button type="submit">Submit</button>
-        </form>
+        <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        name="name"
+        value={formData.name}
+        onChange={handleChange}
+        placeholder="Your Name"
+        className="contact-input"
+        required
+      />
+      <input
+        type="email"
+        name="email"
+        value={formData.email}
+        onChange={handleChange}
+        placeholder="Your Email"
+        className="contact-input"
+        required
+      />
+      <input
+        type="text"
+        name="subject"
+        value={formData.subject}
+        onChange={handleChange}
+        placeholder="Subject"
+        className="contact-input"
+        required
+      />
+      <textarea
+        name="message"
+        value={formData.message}
+        onChange={handleChange}
+        placeholder="Message"
+        className="contact-input"
+        required
+      ></textarea>
+      
+      <button
+        type="submit"
+        className="send-btn"
+        disabled={isSending}
+        style={{ opacity: isSending ? 0.6 : 1, cursor: isSending ? 'not-allowed' : 'pointer' }}
+      >
+        {isSending ? 'Sending...' : 'Send Message'}
+      </button>
+    </form>
       </section>
     </div>
   );

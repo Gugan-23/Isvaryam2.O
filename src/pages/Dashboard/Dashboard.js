@@ -4,6 +4,7 @@ import classes from './dashboard.module.css';
 import { Link } from 'react-router-dom';
 
 export default function Dashboard() {
+  
   const { user } = useAuth();
 
   return (
