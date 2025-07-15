@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '../axiosConfig'; // ✅ use your config, not plain 'axios'
 
 // Fetch current user's wishlist (returns array of { productId: { ...product } })
 export async function fetchWishlist() {
