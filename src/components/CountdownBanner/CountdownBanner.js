@@ -61,7 +61,7 @@ const CountdownBanner = () => {
   };
 
    const handleShopNow = () => {
-    navigate('/products'); // ✅ Navigate to your product page route
+    navigate('/product'); // ✅ Navigate to your product page route
   };
 
   return (
