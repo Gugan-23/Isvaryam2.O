@@ -298,3 +298,75 @@
   font-size: 14px;
   text-transform: uppercase;
 }
+
+/* Previously: @media (max-width: 768px) */
+@media (max-width: 1219px) {
+  .container {
+    flex-direction: row;
+    height: auto;
+    padding: 0.8rem 1rem;
+  }
+
+  .logo-desktop {
+    display: none;
+  }
+
+  .logo-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    position: absolute;
+    left: 50%;
+    top: 18px;
+    transform: translateX(-50%);
+    z-index: 250;
+  }
+
+  .logo-mobile img {
+    height: 50px;
+    max-height: 60px;
+  }
+
+  .hamburger {
+    display: flex;
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    left: auto;
+  }
+
+  .nav {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    background-color: #131921;
+    width: 70%;
+    max-width: 300px;
+    height: 100vh;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 2rem 1.5rem;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+    transition: right 0.3s;
+    z-index: 200;
+  }
+
+  .nav.open {
+    right: 0;
+  }
+
+  .nav_links {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2rem;
+    width: 100%;
+  }
+
+  .nav_links a,
+  .authButton {
+    font-size: 1.05rem;
+    padding: 0.7rem 1.2rem;
+  }
+}
