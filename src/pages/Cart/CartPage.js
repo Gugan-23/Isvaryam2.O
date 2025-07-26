@@ -76,11 +76,25 @@ export default function CartPage() {
           </div>
 
           <div className={classes.checkout_footer}>
-            <div className={classes.amount_to_pay}>
-              <strong>To Pay:</strong> ₹{totalPrice.toLocaleString()}
-            </div>
-            <Link to="/checkout" className={classes.checkout_btn}>Continue</Link>
-          </div>
+  <div className={classes.amount_to_pay}>
+    <strong>To Pay:</strong> ₹{totalPrice.toLocaleString()}
+  </div>
+
+  {totalPrice >= 1000 ? (
+    <Link to="/checkout" className={classes.checkout_btn}>Continue</Link>
+  ) : (
+    <>
+      <button
+        className={classes.checkout_btn}
+        onClick={() => alert("Minimum order amount must be ₹1000 to proceed to checkout.")}
+        style={{ opacity: 0.9, cursor: 'pointer', backgroundColor: '#ccc' }}
+      >
+        Continue
+      </button>
+    </>
+  )}
+</div>
+
         </>
       )}
     </div>
