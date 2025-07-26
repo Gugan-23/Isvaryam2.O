@@ -17,6 +17,8 @@ function App() {
   const location = useLocation();
   const isHome = location.pathname === '/';
 
+  const isAboutus=location.pathname==='/about';
+
   useEffect(() => {
     setLoadingInterceptor({ showLoading, hideLoading });
 
