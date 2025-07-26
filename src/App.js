@@ -40,12 +40,14 @@ function App() {
         <Header />
 
         <main
-          className="main-content"
-          style={{
-            padding: isHome ? '0' : '20px 0',
-            flex: 1,
-          }}
-        >
+  className="main-content"
+  style={{
+    padding: isHome || isAboutus ? '0' : '20px 0',
+    flex: 1,
+    backgroundColor: isAboutus ? '#f5f5f5' : 'transparent', // match Chatbot bg or your design
+  }}
+>
+
           <AppRoutes />
         </main>
 
