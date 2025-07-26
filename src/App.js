@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import AppRoutes from './AppRoutes';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
@@ -12,7 +13,9 @@ import './App.css';
 function App() {
   const { showLoading, hideLoading } = useLoading();
   const [showChatbot, setShowChatbot] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); // Mobile flag
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const location = useLocation(); // For conditional layout
+  const isHome = location.pathname === '/'; // Check if current route is homepage
 
   useEffect(() => {
     setLoadingInterceptor({ showLoading, hideLoading });
@@ -35,9 +38,18 @@ function App() {
       <div className="app-container">
         <Loading />
         <Header />
-        <main className="main-content">
+
+        {/* Conditional main content padding */}
+        <main
+          className="main-content"
+          style={{
+            padding: isHome ? '0' : '20px 0',
+            flex: 1,
+          }}
+        >
           <AppRoutes />
         </main>
+
         <Footer />
 
         {/* Chatbot Toggle Button */}
