@@ -13,8 +13,7 @@ import NotFound from '../../components/NotFound/NotFound';
 import Loading from '../../components/Loading/Loading';
 import './HomePage.css';
 import aboutImage from '../../components/assets/images/about.jpg';
-import axios from '../../axiosConfig';
-
+import axios from 'axios';
 import StatsSection from '../../components/StatsSection/StatsSection';
 import CategorySection from '../../components/Category/category'; // ad
 import CountdownBanner from '../../components/CountdownBanner/CountdownBanner';
@@ -276,36 +275,46 @@ const [message, setMessage] = useState('');
 
 
   return (
-    <div className="home-page" style={{ backgroundColor: bgColor, transition: 'background-color 1s ease-in-out' }} >
+    <div
+  className="home-page"
+  style={{
+    backgroundColor: bgColor,
+    transition: 'background-color 1s ease-in-out',
+    margin: 0,
+    padding: 0,
+  }}
+>
+  <div className="about-hero" style={{ margin: 0, padding: 0 }}>
+    <video
+      autoPlay
+      loop
+      muted
+      playsInline
+      className="about-hero-video"
+      style={{
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+        left: 0,
+        top: 0,
+        zIndex: 0,
+      }}
+    >
+      <source src="/about hero.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
 
-      {/* Hero Section */}
+    <div className="hero-overlay" style={{ position: 'relative', zIndex: 1 }}>
+      <h1 style={{ fontFamily: 'Arial Black, Arial, sans-serif' }}>
+        𝕎𝕖𝕝𝕔𝕠𝕞𝕖 𝕋𝕠 𝕀𝕤𝕧𝕒𝕣𝕪𝕒𝕞
+      </h1>
+      <p style={{ fontFamily: 'Arial Black, Arial, sans-serif' }}>
+        HEALTHY HEART BETTER LIFE
+      </p>
+    </div>
+  </div>
 
-      <div className="about-hero">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="about-hero-video"
-          style={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            left: 0,
-            top: 0,
-            zIndex: 0,
-          }}
-        >
-          <source src="/about hero.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <div className="hero-overlay" style={{ position: 'relative', zIndex: 1}} >
-            <h1>WELCOME TO ISVARYAM</h1>
-            <p>HEALTHY HEART BETTER LIFE</p>
-        </div>
-      </div>
-      
       <div className="search-container" style={{ marginTop: '2rem' }}>
         
     </div>
