@@ -14,8 +14,8 @@ function App() {
   const { showLoading, hideLoading } = useLoading();
   const [showChatbot, setShowChatbot] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-  const location = useLocation(); // For conditional layout
-  const isHome = location.pathname === '/'; // Check if current route is homepage
+  const location = useLocation();
+  const isHome = location.pathname === '/';
 
   useEffect(() => {
     setLoadingInterceptor({ showLoading, hideLoading });
@@ -39,7 +39,6 @@ function App() {
         <Loading />
         <Header />
 
-        {/* Conditional main content padding */}
         <main
           className="main-content"
           style={{
@@ -55,6 +54,7 @@ function App() {
         {/* Chatbot Toggle Button */}
         <button
           onClick={toggleChatbot}
+          className="chatbot-toggle-button"
           style={{
             position: 'fixed',
             bottom: '20px',
@@ -68,7 +68,10 @@ function App() {
             border: 'none',
             fontSize: isMobile ? '22px' : '28px',
             boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
           }}
         >
           💬
@@ -83,40 +86,57 @@ function App() {
               right: '20px',
               width: isMobile ? '90vw' : '350px',
               height: isMobile ? '75vh' : '500px',
+              maxHeight: '80vh',
               zIndex: 1000,
               borderRadius: '12px',
-              boxShadow: '0 0 10px rgba(0,0,0,0.2)',
+              boxShadow: '0 0 20px rgba(0,0,0,0.3)',
               backgroundColor: '#fff',
               overflow: 'hidden',
+              display: 'flex',
+              flexDirection: 'column'
             }}
           >
-            <button
-              onClick={toggleChatbot}
-              style={{
-                position: 'absolute',
-                top: '8px',
-                right: '8px',
-                background: '#000000',
-                color: 'white',
-                border: 'none',
-                width: '24px',
-                height: '24px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                fontSize: '14px',
-                zIndex: 1101,
-              }}
-            >
-              ✖
-            </button>
+            {/* Chatbot Header */}
+            <div style={{
+              backgroundColor: '#4CAF50',
+              color: 'white',
+              padding: '12px 16px',
+              fontWeight: 'bold',
+              fontSize: '16px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+              <span>Isvaryam Assistant</span>
+              <button
+                onClick={toggleChatbot}
+                style={{
+                  background: 'transparent',
+                  color: 'white',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                  fontSize: '16px',
+                  padding: '0',
+                  lineHeight: '1'
+                }}
+              >
+                ✖
+              </button>
+            </div>
 
+            {/* Chatbot Iframe - Key changes here */}
             <iframe
               src="https://isvarayam-chatbot-1.onrender.com/"
               style={{
                 width: '100%',
                 height: '100%',
                 border: 'none',
+                flex: 1,
+                backgroundColor: '#f5f5f5',
+                overflow: 'hidden' // Prevent double scrollbars
               }}
+              scrolling="no" // Disable iframe scrollbar
               allow="microphone; camera"
               title="Chatbot"
             />
