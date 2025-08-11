@@ -16,6 +16,7 @@ export default function PaypalButtons({ order }) {
       options={{
         clientId:
           'AZvhPD2YvIfWr_OdluJ5izlWFDta-D6LN8BHI-3nCG_XK3S5u_cJ9VP0yIRrCA7HaZ8prBX4j8w299dk',
+        currency: 'INR', // ✅ Set currency at the provider level too
       }}
     >
       <Buttons order={order} />
@@ -28,16 +29,17 @@ function Buttons({ order }) {
   const navigate = useNavigate();
   const [{ isPending }] = usePayPalScriptReducer();
   const { showLoading, hideLoading } = useLoading();
+
   useEffect(() => {
     isPending ? showLoading() : hideLoading();
-  });
+  }, [isPending, showLoading, hideLoading]);
 
   const createOrder = (data, actions) => {
     return actions.order.create({
       purchase_units: [
         {
           amount: {
-            currency_code: 'USD',
+            currency_code: 'INR', // ✅ Change to INR
             value: order.totalPrice,
           },
         },
@@ -50,15 +52,15 @@ function Buttons({ order }) {
       const payment = await actions.order.capture();
       const orderId = await pay(payment.id);
       clearCart();
-      toast.success('Payment Saved Successfully', 'Success');
+      toast.success('Payment Saved Successfully');
       navigate('/track/' + orderId);
     } catch (error) {
-      toast.error('Payment Save Failed', 'Error');
+      toast.error('Payment Save Failed');
     }
   };
 
-  const onError = err => {
-    toast.error('Payment Failed', 'Error');
+  const onError = () => {
+    toast.error('Payment Failed');
   };
 
   return (
