@@ -1,98 +1,71 @@
-import React, { useEffect, useState } from 'react';
+import {
+  PayPalButtons,
+  PayPalScriptProvider,
+  usePayPalScriptReducer,
+} from '@paypal/react-paypal-js';
+import React, { useEffect } from 'react';
 import { useLoading } from '../../hooks/useLoading';
 import { pay } from '../../services/orderService';
 import { useCart } from '../../hooks/useCart';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
-export default function PaypalRedirectCheckout({ order }) {
+export default function PaypalButtons({ order }) {
+  return (
+    <PayPalScriptProvider
+      options={{
+        clientId:
+          'AZvhPD2YvIfWr_OdluJ5izlWFDta-D6LN8BHI-3nCG_XK3S5u_cJ9VP0yIRrCA7HaZ8prBX4j8w299dk',
+      }}
+    >
+      <Buttons order={order} />
+    </PayPalScriptProvider>
+  );
+}
+
+function Buttons({ order }) {
   const { clearCart } = useCart();
   const navigate = useNavigate();
+  const [{ isPending }] = usePayPalScriptReducer();
   const { showLoading, hideLoading } = useLoading();
-  const [inrToUsdRate, setInrToUsdRate] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  // Fetch INR → USD conversion rate
   useEffect(() => {
-    const fetchRate = async () => {
-      try {
-        const res = await fetch(
-          'https://api.exchangerate.host/latest?base=INR&symbols=USD'
-        );
-        const data = await res.json();
-        if (data?.rates?.USD) {
-          setInrToUsdRate(data.rates.USD);
-        } else {
-          toast.error('Failed to fetch currency rate');
-        }
-      } catch (error) {
-        console.error(error);
-        toast.error('Currency conversion API error');
-      }
-    };
-    fetchRate();
-  }, []);
+    isPending ? showLoading() : hideLoading();
+  });
 
-  const handleCheckout = async () => {
-    if (!inrToUsdRate) {
-      toast.error('Currency rate not loaded yet');
-      return;
-    }
-    setLoading(true);
-    showLoading();
+  const createOrder = (data, actions) => {
+    return actions.order.create({
+      purchase_units: [
+        {
+          amount: {
+            currency_code: 'USD',
+            value: order.totalPrice,
+          },
+        },
+      ],
+    });
+  };
 
+  const onApprove = async (data, actions) => {
     try {
-      // Convert INR to USD
-      const amountUSD = (order.totalPrice * inrToUsdRate).toFixed(2);
-
-      // Create PayPal order from your backend
-      const res = await fetch('https://your-backend.com/create-paypal-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: amountUSD, currency: 'USD' }),
-      });
-
-      const data = await res.json();
-
-      if (data?.approvalUrl) {
-        // Redirect to PayPal checkout page
-        window.location.href = data.approvalUrl;
-      } else {
-        toast.error('Failed to create PayPal order');
-      }
+      const payment = await actions.order.capture();
+      const orderId = await pay(payment.id);
+      clearCart();
+      toast.success('Payment Saved Successfully', 'Success');
+      navigate('/track/' + orderId);
     } catch (error) {
-      console.error(error);
-      toast.error('Checkout failed');
-    } finally {
-      hideLoading();
-      setLoading(false);
+      toast.error('Payment Save Failed', 'Error');
     }
   };
 
-  return (
-    <div>
-      <p>Total: ₹{order.totalPrice}</p>
-      {inrToUsdRate ? (
-        <p>
-          (~${(order.totalPrice * inrToUsdRate).toFixed(2)} USD will be charged)
-        </p>
-      ) : (
-        <p>Fetching USD rate...</p>
-      )}
+  const onError = err => {
+    toast.error('Payment Failed', 'Error');
+  };
 
-      <button
-        onClick={handleCheckout}
-        disabled={!inrToUsdRate || loading}
-        style={{
-          padding: '10px 20px',
-          background: '#0070ba',
-          color: '#fff',
-          border: 'none',
-          cursor: 'pointer',
-        }}
-      >
-        Pay with PayPal
-      </button>
-    </div>
+  return (
+    <PayPalButtons
+      createOrder={createOrder}
+      onApprove={onApprove}
+      onError={onError}
+    />
   );
 }
