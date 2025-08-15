@@ -370,3 +370,46 @@
     padding: 0.7rem 1.2rem;
   }
 }
+
+.blackText {
+  color: #000 !important;
+}
+
+.blackText a {
+  color: #000 !important;
+}
+
+.blackText .authButton {
+  color: #000 !important;
+}
+.header {
+  transition: all 0.3s ease;
+}
+
+/* Light background → dark text + light gray shadow */
+.lightBg {
+  color: black;
+  text-shadow: 0px 1px 2px rgba(200, 200, 200, 0.8);
+}
+
+.lightBg a {
+  color: black;
+}
+
+/* Dark background → white text + dark shadow */
+.darkBg {
+  color: white;
+  text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+.darkBg a {
+  color: white;
+}
+.hamburger span {
+  display: block;
+  width: 25px;
+  height: 3px;
+  margin: 5px;
+  background-color: var(--hamburger-color, #000); /* fallback black */
+  transition: 0.3s;
+}
