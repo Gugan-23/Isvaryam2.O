@@ -1,12 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import './countdownBanner.css';
+import { useNavigate } from 'react-router-dom';
 
-import { useNavigate } from 'react-router-dom'; // ✅ Import useNavigate
 const OFFER_START_HOUR = 12; // Offer starts every day at 12 PM
+
+// Detect light vs dark background
+const isLightColor = (color) => {
+  let c = color?.charAt(0) === "#" ? color.substring(1) : color;
+  if (!c) return true; // default light
+  if (c.length === 3) {
+    c = c.split("").map(ch => ch + ch).join("");
+  }
+  const r = parseInt(c.substr(0, 2), 16);
+  const g = parseInt(c.substr(2, 2), 16);
+  const b = parseInt(c.substr(4, 2), 16);
+
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.7; // true if light
+};
 
 const getOfferTimes = () => {
   const now = new Date();
-
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), OFFER_START_HOUR, 0, 0);
   const todayEnd = new Date(todayStart.getTime() + 24 * 60 * 60 * 1000); // 24 hours later
 
@@ -26,7 +40,22 @@ const getOfferTimes = () => {
 const CountdownBanner = () => {
   const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState({});
-  const [status, setStatus] = useState('upcoming'); // 'upcoming' | 'running'
+  const [status, setStatus] = useState('upcoming');
+  const [bannerColor, setBannerColor] = useState('#ffffff'); // default white
+
+  // Fetch background color from API
+  useEffect(() => {
+    fetch('https://admin-isvaryam.onrender.com/colorheader')
+      .then(res => res.json())
+      .then(data => {
+        if (data?.color) {
+          setBannerColor(data.color);
+        }
+      })
+      .catch(err => {
+        console.error("❌ Failed to load banner color:", err);
+      });
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -60,12 +89,21 @@ const CountdownBanner = () => {
     return circumference - (value / max) * circumference;
   };
 
-   const handleShopNow = () => {
-    navigate('/product'); // ✅ Navigate to your product page route
+  const handleShopNow = () => {
+    navigate('/product');
   };
 
+  const lightBg = isLightColor(bannerColor);
+  const textColor = lightBg ? '#000000' : '#ffffff';
+  const textShadow = lightBg
+    ? '0px 1px 2px rgba(200,200,200,0.8)'
+    : '0px 1px 3px rgba(0,0,0,0.9)';
+
   return (
-    <div className="banner_wrapper">
+    <div
+      className="banner_wrapper"
+      style={{ backgroundColor: bannerColor, color: textColor, textShadow }}
+    >
       <div className="banner_content">
         <h2>Season's Biggest Sale | Flat 10% Off On All Products Daily!</h2>
 
@@ -119,9 +157,9 @@ const CountdownBanner = () => {
             </div>
           </>
         )}
-       <div className="cta_button">
+        <div className="cta_button">
           {status === 'running' ? (
-            <button onClick={handleShopNow}>Shop Now</button> // ✅ Add click handler
+            <button onClick={handleShopNow}>Shop Now</button>
           ) : (
             <button disabled style={{ opacity: 0.6, cursor: 'not-allowed' }}>
               Coming Soon
@@ -129,8 +167,6 @@ const CountdownBanner = () => {
           )}
         </div>
       </div>
-
-      
     </div>
   );
 };
