@@ -117,8 +117,14 @@ export default function Header() {
                   <li><Link style={{ color: textColor }} to="/orders" onClick={() => setMenuOpen(false)}>My Orders</Link></li>
                   <li><Link style={{ color: textColor }} to="/cart" onClick={() => setMenuOpen(false)}>My Cart</Link></li>
                   <li>
-                    <Link style={{ color: textColor }} to="/profile" onClick={() => setMenuOpen(false)}>
-                      {user?.name?.[0]?.toUpperCase() || "Profile"}
+                    <Link style={{ color: textColor }} to="/profile" onClick={() => setMenuOpen(false)} className={classes.profileLink}>
+                      {user?.name?.length > 10 ? (
+                        <div className={classes.profileAvatar}>
+                          {user?.name?.[0]?.toUpperCase()}
+                        </div>
+                      ) : (
+                        user?.name || "Profile"
+                      )}
                     </Link>
                   </li>
                   <li>
