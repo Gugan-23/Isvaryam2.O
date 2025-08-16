@@ -35,8 +35,6 @@ export default function PaypalButtons({ order }) {
 
   if (!usdPrice) return <div>Loading PayPal...</div>;
 
-  console.log("ENV Check:", process.env);
-  console.log("PayPal Client ID:", clientId);
   console.log("INR:", order.totalPrice, "→ USD:", usdPrice);
 
   return (
